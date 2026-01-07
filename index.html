@@ -871,6 +871,43 @@
             50% { opacity: 1; }
         }
 
+        /* Livestream */
+        .panel-wide {
+            grid-column: span 2;
+        }
+
+        .livestream-container {
+            padding: 0 !important;
+            height: 350px;
+        }
+
+        .livestream-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .live-indicator {
+            background: var(--red);
+            color: #fff;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            font-weight: bold;
+            animation: live-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes live-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @media (max-width: 900px) {
+            .panel-wide {
+                grid-column: span 1;
+            }
+        }
+
         /* Congressional Trades */
         .congress-item {
             padding: 0.6rem 1rem;
@@ -1422,6 +1459,22 @@
             </div>
         </section>
 
+        <!-- TBPN Livestream -->
+        <section class="panel panel-wide" data-panel="tbpn">
+            <div class="panel-header">
+                <span class="panel-title">TBPN Live</span>
+                <span class="live-indicator">LIVE</span>
+            </div>
+            <div class="panel-content livestream-container" id="tbpnPanel">
+                <iframe
+                    src="https://www.youtube.com/embed/jWEZa9WEnIo?autoplay=0&mute=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </section>
+
     </main>
 
     <script>
@@ -1444,7 +1497,8 @@
             ai: { name: 'AI Arms Race', priority: 3 },
             layoffs: { name: 'Layoffs Tracker', priority: 3 },
             venezuela: { name: 'Venezuela Situation', priority: 2 },
-            greenland: { name: 'Greenland Situation', priority: 2 }
+            greenland: { name: 'Greenland Situation', priority: 2 },
+            tbpn: { name: 'TBPN Live', priority: 1 }
         };
 
         // Load panel visibility from localStorage
