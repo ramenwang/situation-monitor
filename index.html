@@ -1905,6 +1905,412 @@
                 max-height: 350px;
             }
         }
+
+        /* Conflict Zone Boundaries */
+        .conflict-zone-path {
+            fill: none;
+            stroke: #ff3333;
+            stroke-width: 2;
+            stroke-dasharray: 8, 4;
+            stroke-linecap: round;
+            opacity: 0.8;
+            animation: conflict-march 1s linear infinite;
+        }
+
+        .conflict-zone-path.high-intensity {
+            stroke: #ff0000;
+            stroke-width: 3;
+            filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.6));
+        }
+
+        .conflict-zone-fill {
+            fill: rgba(255, 50, 50, 0.1);
+            stroke: none;
+        }
+
+        .conflict-zone-label {
+            position: absolute;
+            font-size: 0.5rem;
+            color: #ff3333;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 0.15rem 0.4rem;
+            border: 1px solid #ff3333;
+            pointer-events: none;
+            white-space: nowrap;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes conflict-march {
+            to { stroke-dashoffset: -12; }
+        }
+
+        /* Military Base Markers */
+        .military-base {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            pointer-events: auto;
+            z-index: 19;
+            cursor: pointer;
+        }
+
+        .military-base:hover .base-icon {
+            transform: scale(1.3);
+        }
+
+        .base-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 1px;
+            transition: transform 0.2s;
+        }
+
+        .base-icon.us-nato {
+            background: #4488ff;
+            border: 1px solid #66aaff;
+            box-shadow: 0 0 6px rgba(68, 136, 255, 0.5);
+        }
+
+        .base-icon.china {
+            background: #ff4444;
+            border: 1px solid #ff6666;
+            box-shadow: 0 0 6px rgba(255, 68, 68, 0.5);
+        }
+
+        .base-icon.russia {
+            background: #ff8800;
+            border: 1px solid #ffaa44;
+            box-shadow: 0 0 6px rgba(255, 136, 0, 0.5);
+        }
+
+        .base-label {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.4rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .military-base:hover .base-label {
+            opacity: 1;
+        }
+
+        .base-label.us-nato { color: #4488ff; }
+        .base-label.china { color: #ff4444; }
+        .base-label.russia { color: #ff8800; }
+
+        /* Nuclear Facility Markers */
+        .nuclear-facility {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            pointer-events: auto;
+            z-index: 18;
+            cursor: pointer;
+        }
+
+        .nuclear-facility:hover .nuclear-icon {
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+        }
+
+        .nuclear-icon {
+            width: 10px;
+            height: 10px;
+            background: #ffcc00;
+            border: 2px solid #ffff00;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nuclear-icon::before {
+            content: '☢';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6px;
+            color: #000;
+        }
+
+        .nuclear-icon.weapons {
+            background: #ff0000;
+            border-color: #ff4444;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            animation: nuclear-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes nuclear-pulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(255, 0, 0, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.9); }
+        }
+
+        .nuclear-label {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.4rem;
+            color: #ffcc00;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .nuclear-facility:hover .nuclear-label {
+            opacity: 1;
+        }
+
+        /* Undersea Cables */
+        .cable-path {
+            fill: none;
+            stroke: #00ffff;
+            stroke-width: 1.5;
+            stroke-opacity: 0.4;
+            stroke-linecap: round;
+        }
+
+        .cable-path:hover {
+            stroke-opacity: 0.9;
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 4px rgba(0, 255, 255, 0.6));
+        }
+
+        .cable-path.major {
+            stroke-width: 2;
+            stroke-opacity: 0.6;
+        }
+
+        .cable-endpoint {
+            fill: #00ffff;
+            stroke: #00aaaa;
+            stroke-width: 1;
+        }
+
+        /* Sanctions Heat Map - Country fills */
+        .country-sanctioned-severe {
+            fill: #660000 !important;
+        }
+
+        .country-sanctioned-high {
+            fill: #442200 !important;
+        }
+
+        .country-sanctioned-moderate {
+            fill: #333300 !important;
+        }
+
+        .country-sanctioned-low {
+            fill: #223322 !important;
+        }
+
+        /* Breaking News Pulse */
+        .news-pulse {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 25;
+        }
+
+        .news-pulse-ring {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: news-pulse-expand 2s ease-out infinite;
+        }
+
+        .news-pulse-ring:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .news-pulse-ring:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes news-pulse-expand {
+            0% {
+                width: 10px;
+                height: 10px;
+                opacity: 1;
+                border-width: 3px;
+            }
+            100% {
+                width: 80px;
+                height: 80px;
+                opacity: 0;
+                border-width: 1px;
+            }
+        }
+
+        .news-pulse-label {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5rem;
+            color: #ff0000;
+            white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            animation: blink 1s ease-in-out infinite;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.2rem 0.5rem;
+            border: 1px solid #ff0000;
+        }
+
+        /* 24-Hour Flashback Slider */
+        .flashback-control {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 0.5rem 1rem;
+            border: 1px solid #0f5040;
+            z-index: 50;
+        }
+
+        .flashback-label {
+            font-size: 0.55rem;
+            color: #0a8060;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .flashback-slider {
+            width: 200px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #0a3020;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .flashback-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+        }
+
+        .flashback-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .flashback-time {
+            font-size: 0.65rem;
+            color: #00ff88;
+            font-family: 'SF Mono', monospace;
+            min-width: 60px;
+        }
+
+        .flashback-mode-indicator {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 170, 0, 0.9);
+            color: #000;
+            padding: 0.3rem 1rem;
+            font-size: 0.6rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            z-index: 50;
+            display: none;
+        }
+
+        .flashback-mode-indicator.active {
+            display: block;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        /* News Density Heatmap */
+        .density-blob {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 12;
+            mix-blend-mode: screen;
+        }
+
+        .density-blob.low {
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%);
+        }
+
+        .density-blob.medium {
+            background: radial-gradient(circle, rgba(255, 204, 0, 0.35) 0%, transparent 70%);
+        }
+
+        .density-blob.high {
+            background: radial-gradient(circle, rgba(255, 68, 68, 0.4) 0%, transparent 70%);
+            animation: density-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes density-glow {
+            0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Map Layer Toggle */
+        .map-layer-toggle {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3px;
+            border: 1px solid #0f5040;
+            z-index: 50;
+        }
+
+        .layer-btn {
+            background: transparent;
+            border: 1px solid #0a3020;
+            color: #0a8060;
+            font-size: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-family: 'SF Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        .layer-btn:hover {
+            border-color: #0f5040;
+            color: #00ff88;
+        }
+
+        .layer-btn.active {
+            background: #0f5040;
+            color: #00ff88;
+            border-color: #00ff88;
+        }
     </style>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
@@ -2848,6 +3254,185 @@
             }
         ];
 
+        // Active conflict zones with approximate boundaries
+        const CONFLICT_ZONES = [
+            {
+                id: 'ukraine',
+                name: 'Ukraine Conflict',
+                intensity: 'high',
+                // Approximate frontline coordinates (simplified polygon)
+                coords: [
+                    [37.5, 47.0], [38.5, 47.5], [39.0, 48.5], [38.0, 49.5],
+                    [37.0, 49.0], [36.0, 48.5], [35.5, 47.5], [36.5, 47.0]
+                ],
+                labelPos: { lat: 48.0, lon: 37.5 }
+            },
+            {
+                id: 'gaza',
+                name: 'Gaza Conflict',
+                intensity: 'high',
+                coords: [
+                    [34.2, 31.6], [34.6, 31.6], [34.6, 31.2], [34.2, 31.2]
+                ],
+                labelPos: { lat: 31.4, lon: 34.4 }
+            },
+            {
+                id: 'sudan',
+                name: 'Sudan Civil War',
+                intensity: 'medium',
+                coords: [
+                    [32.0, 16.0], [34.0, 16.5], [35.0, 15.0], [33.5, 13.5],
+                    [31.5, 14.0], [31.0, 15.5]
+                ],
+                labelPos: { lat: 15.0, lon: 32.5 }
+            },
+            {
+                id: 'myanmar',
+                name: 'Myanmar Civil War',
+                intensity: 'medium',
+                coords: [
+                    [96.0, 22.0], [98.0, 23.0], [98.5, 21.0], [97.0, 19.5], [95.5, 20.5]
+                ],
+                labelPos: { lat: 21.0, lon: 96.5 }
+            },
+            {
+                id: 'taiwan_strait',
+                name: 'Taiwan Strait',
+                intensity: 'watch',
+                coords: [
+                    [119.0, 26.0], [121.5, 26.0], [121.5, 22.5], [119.0, 22.5]
+                ],
+                labelPos: { lat: 24.5, lon: 120.0 }
+            }
+        ];
+
+        // Military bases around the world
+        const MILITARY_BASES = [
+            // US/NATO Major Bases
+            { id: 'ramstein', name: 'Ramstein AB', lat: 49.44, lon: 7.6, type: 'us-nato' },
+            { id: 'diego_garcia', name: 'Diego Garcia', lat: -7.32, lon: 72.42, type: 'us-nato' },
+            { id: 'guam', name: 'Andersen AFB', lat: 13.58, lon: 144.92, type: 'us-nato' },
+            { id: 'okinawa', name: 'Kadena AB', lat: 26.35, lon: 127.77, type: 'us-nato' },
+            { id: 'yokosuka', name: 'Yokosuka', lat: 35.28, lon: 139.67, type: 'us-nato' },
+            { id: 'bahrain', name: 'NSA Bahrain', lat: 26.23, lon: 50.65, type: 'us-nato' },
+            { id: 'qatar', name: 'Al Udeid', lat: 25.12, lon: 51.31, type: 'us-nato' },
+            { id: 'djibouti', name: 'Camp Lemonnier', lat: 11.55, lon: 43.15, type: 'us-nato' },
+            { id: 'incirlik', name: 'Incirlik AB', lat: 37.0, lon: 35.43, type: 'us-nato' },
+            { id: 'rota', name: 'NS Rota', lat: 36.62, lon: -6.35, type: 'us-nato' },
+            // Chinese Bases
+            { id: 'djibouti_cn', name: 'PLA Djibouti', lat: 11.59, lon: 43.05, type: 'china' },
+            { id: 'woody_island', name: 'Woody Island', lat: 16.83, lon: 112.33, type: 'china' },
+            { id: 'fiery_cross', name: 'Fiery Cross', lat: 9.55, lon: 112.89, type: 'china' },
+            { id: 'mischief_reef', name: 'Mischief Reef', lat: 9.90, lon: 115.53, type: 'china' },
+            { id: 'ream', name: 'Ream (Cambodia)', lat: 10.52, lon: 103.63, type: 'china' },
+            // Russian Bases
+            { id: 'kaliningrad', name: 'Kaliningrad', lat: 54.71, lon: 20.51, type: 'russia' },
+            { id: 'sevastopol', name: 'Sevastopol', lat: 44.62, lon: 33.53, type: 'russia' },
+            { id: 'tartus', name: 'Tartus (Syria)', lat: 34.89, lon: 35.87, type: 'russia' },
+            { id: 'hmeimim', name: 'Hmeimim AB', lat: 35.41, lon: 35.95, type: 'russia' },
+            { id: 'cam_ranh', name: 'Cam Ranh', lat: 11.99, lon: 109.22, type: 'russia' }
+        ];
+
+        // Nuclear facilities (power plants, enrichment, weapons sites)
+        const NUCLEAR_FACILITIES = [
+            // Major Power Plants
+            { id: 'zaporizhzhia', name: 'Zaporizhzhia NPP', lat: 47.51, lon: 34.58, type: 'plant', status: 'contested' },
+            { id: 'fukushima', name: 'Fukushima', lat: 37.42, lon: 141.03, type: 'plant', status: 'decommissioning' },
+            { id: 'flamanville', name: 'Flamanville', lat: 49.54, lon: -1.88, type: 'plant', status: 'active' },
+            { id: 'bruce', name: 'Bruce Power', lat: 44.33, lon: -81.60, type: 'plant', status: 'active' },
+            // Enrichment/Weapons Facilities
+            { id: 'natanz', name: 'Natanz', lat: 33.72, lon: 51.73, type: 'enrichment', status: 'active' },
+            { id: 'fordow', name: 'Fordow', lat: 34.88, lon: 51.0, type: 'enrichment', status: 'active' },
+            { id: 'yongbyon', name: 'Yongbyon', lat: 39.80, lon: 125.75, type: 'weapons', status: 'active' },
+            { id: 'dimona', name: 'Dimona', lat: 31.0, lon: 35.15, type: 'weapons', status: 'active' },
+            { id: 'los_alamos', name: 'Los Alamos', lat: 35.88, lon: -106.30, type: 'weapons', status: 'active' },
+            { id: 'sellafield', name: 'Sellafield', lat: 54.42, lon: -3.50, type: 'reprocessing', status: 'active' },
+            { id: 'la_hague', name: 'La Hague', lat: 49.68, lon: -1.88, type: 'reprocessing', status: 'active' }
+        ];
+
+        // Major undersea cable routes (simplified waypoints)
+        const UNDERSEA_CABLES = [
+            {
+                id: 'transatlantic_1',
+                name: 'Transatlantic (TAT-14)',
+                major: true,
+                points: [[-74.0, 40.7], [-30.0, 45.0], [-9.0, 52.0]]
+            },
+            {
+                id: 'transpacific_1',
+                name: 'Transpacific (Unity)',
+                major: true,
+                points: [[-122.4, 37.8], [-155.0, 25.0], [139.7, 35.7]]
+            },
+            {
+                id: 'sea_me_we_5',
+                name: 'SEA-ME-WE 5',
+                major: true,
+                points: [[103.8, 1.3], [80.0, 10.0], [55.0, 25.0], [35.0, 30.0], [12.0, 37.0], [-5.0, 36.0]]
+            },
+            {
+                id: 'aae1',
+                name: 'Asia-Africa-Europe 1',
+                major: true,
+                points: [[121.0, 25.0], [103.8, 1.3], [73.0, 15.0], [44.0, 12.0], [35.0, 30.0], [28.0, 41.0]]
+            },
+            {
+                id: 'curie',
+                name: 'Curie (Google)',
+                major: false,
+                points: [[-122.4, 37.8], [-80.0, 0.0], [-70.0, -33.0]]
+            },
+            {
+                id: 'marea',
+                name: 'MAREA (Microsoft)',
+                major: true,
+                points: [[-73.8, 39.4], [-9.0, 37.0]]
+            }
+        ];
+
+        // Countries under sanctions (ISO 3166-1 numeric codes used by Natural Earth)
+        const SANCTIONED_COUNTRIES = {
+            // Severe sanctions (comprehensive)
+            408: 'severe',  // North Korea
+            728: 'severe',  // South Sudan
+            729: 'severe',  // Sudan
+            760: 'severe',  // Syria
+            // High sanctions
+            364: 'high',    // Iran
+            643: 'high',    // Russia
+            112: 'high',    // Belarus
+            // Moderate sanctions
+            862: 'moderate', // Venezuela
+            104: 'moderate', // Myanmar
+            178: 'moderate', // Congo
+            // Low/targeted sanctions
+            152: 'low',     // Cuba (being modified)
+            716: 'low',     // Zimbabwe
+        };
+
+        // Regions for news density calculation
+        const NEWS_REGIONS = [
+            { id: 'us', name: 'United States', lat: 39.0, lon: -98.0, radius: 60, keywords: ['us', 'america', 'washington', 'trump', 'biden', 'congress'] },
+            { id: 'europe', name: 'Europe', lat: 50.0, lon: 10.0, radius: 55, keywords: ['europe', 'eu', 'european', 'nato', 'brussels'] },
+            { id: 'russia', name: 'Russia', lat: 60.0, lon: 90.0, radius: 50, keywords: ['russia', 'russian', 'putin', 'moscow', 'kremlin'] },
+            { id: 'china', name: 'China', lat: 35.0, lon: 105.0, radius: 55, keywords: ['china', 'chinese', 'beijing', 'xi'] },
+            { id: 'middle_east', name: 'Middle East', lat: 30.0, lon: 45.0, radius: 50, keywords: ['israel', 'iran', 'saudi', 'gaza', 'syria', 'iraq', 'yemen'] },
+            { id: 'east_asia', name: 'East Asia', lat: 35.0, lon: 130.0, radius: 45, keywords: ['japan', 'korea', 'taiwan', 'kim jong'] },
+            { id: 'south_asia', name: 'South Asia', lat: 22.0, lon: 78.0, radius: 45, keywords: ['india', 'pakistan', 'modi'] },
+            { id: 'africa', name: 'Africa', lat: 5.0, lon: 20.0, radius: 55, keywords: ['africa', 'african', 'sudan', 'nigeria', 'ethiopia'] },
+            { id: 'latam', name: 'Latin America', lat: -15.0, lon: -60.0, radius: 50, keywords: ['brazil', 'mexico', 'venezuela', 'argentina'] }
+        ];
+
+        // Map layer visibility state
+        let mapLayers = {
+            conflicts: true,
+            bases: true,
+            nuclear: true,
+            cables: true,
+            sanctions: true,
+            density: true
+        };
+
         // Convert lat/lon to map position (simple equirectangular projection)
         function latLonToXY(lat, lon, width, height) {
             const x = ((lon + 180) / 360) * width;
@@ -2917,7 +3502,7 @@
                     <div class="map-overlays" id="mapOverlays"></div>
                     <div class="map-corner-label tl">GLOBAL ACTIVITY MONITOR</div>
                     <div class="map-corner-label tr">CLASSIFICATION: OPEN SOURCE</div>
-                    <div class="map-corner-label bl">⚓ SHIPPING | 🔴 QUAKES | ◯ CYBER</div>
+                    <div class="map-corner-label bl">⚓ SHIP | ☢ NUKES | ▪ BASES | ═ CABLES</div>
                     <div class="map-corner-label br">${timestamp}</div>
                 </div>
             `;
@@ -2997,14 +3582,66 @@
                 const countries = topojson.feature(world, world.objects.countries);
 
                 svg.append('g')
+                    .attr('class', 'countries-layer')
                     .selectAll('path')
                     .data(countries.features)
                     .enter()
                     .append('path')
                     .attr('d', path)
-                    .attr('fill', '#0a2018')
+                    .attr('fill', d => {
+                        // Apply sanctions coloring if enabled
+                        if (mapLayers.sanctions) {
+                            const countryId = d.id;
+                            const sanctionLevel = SANCTIONED_COUNTRIES[countryId];
+                            if (sanctionLevel === 'severe') return '#660000';
+                            if (sanctionLevel === 'high') return '#442200';
+                            if (sanctionLevel === 'moderate') return '#333300';
+                            if (sanctionLevel === 'low') return '#223322';
+                        }
+                        return '#0a2018';
+                    })
                     .attr('stroke', '#0f5040')
                     .attr('stroke-width', 0.5);
+
+                // Add undersea cables as SVG paths
+                if (mapLayers.cables) {
+                    const cableGroup = svg.append('g').attr('class', 'cables-layer');
+                    UNDERSEA_CABLES.forEach(cable => {
+                        const lineGenerator = d3.line()
+                            .x(d => projection(d)[0])
+                            .y(d => projection(d)[1])
+                            .curve(d3.curveBasis);
+
+                        const points = cable.points.map(p => [p[0], p[1]]);
+                        cableGroup.append('path')
+                            .attr('d', lineGenerator(points))
+                            .attr('class', `cable-path ${cable.major ? 'major' : ''}`)
+                            .append('title')
+                            .text(cable.name);
+                    });
+                }
+
+                // Add conflict zone boundaries
+                if (mapLayers.conflicts) {
+                    const conflictGroup = svg.append('g').attr('class', 'conflicts-layer');
+                    CONFLICT_ZONES.forEach(zone => {
+                        // Create closed polygon path
+                        const points = zone.coords.map(c => projection([c[0], c[1]]));
+                        if (points.length > 0) {
+                            const pathData = 'M' + points.map(p => p.join(',')).join('L') + 'Z';
+
+                            // Fill for zone area
+                            conflictGroup.append('path')
+                                .attr('d', pathData)
+                                .attr('class', 'conflict-zone-fill');
+
+                            // Animated border
+                            conflictGroup.append('path')
+                                .attr('d', pathData)
+                                .attr('class', `conflict-zone-path ${zone.intensity === 'high' ? 'high-intensity' : ''}`);
+                        }
+                    });
+                }
             }
 
             // Helper to convert lon/lat to percentage using the projection
@@ -3030,6 +3667,69 @@
                 const label = lon === 0 ? '0°' : (lon > 0 ? `${lon}°E` : `${Math.abs(lon)}°W`);
                 overlaysHTML += `<div class="coord-label lon" style="left: ${pos.x}%; bottom: 1%;">${label}</div>`;
             });
+
+            // News density heatmap blobs
+            if (mapLayers.density) {
+                const densityScores = calculateNewsDensity(allNews);
+                NEWS_REGIONS.forEach(region => {
+                    const score = densityScores[region.id] || 0;
+                    if (score > 0) {
+                        const pos = toPercent(region.lon, region.lat);
+                        let level = 'low';
+                        let size = region.radius;
+                        if (score >= 10) {
+                            level = 'high';
+                            size = region.radius * 1.5;
+                        } else if (score >= 5) {
+                            level = 'medium';
+                            size = region.radius * 1.2;
+                        }
+                        overlaysHTML += `
+                            <div class="density-blob ${level}"
+                                 style="left: ${pos.x}%; top: ${pos.y}%; width: ${size}px; height: ${size}px; transform: translate(-50%, -50%);"></div>
+                        `;
+                    }
+                });
+            }
+
+            // Conflict zone labels
+            if (mapLayers.conflicts) {
+                CONFLICT_ZONES.forEach(zone => {
+                    const pos = toPercent(zone.labelPos.lon, zone.labelPos.lat);
+                    overlaysHTML += `
+                        <div class="conflict-zone-label" style="left: ${pos.x}%; top: ${pos.y}%;">
+                            ${zone.name}
+                        </div>
+                    `;
+                });
+            }
+
+            // Military base markers
+            if (mapLayers.bases) {
+                MILITARY_BASES.forEach(base => {
+                    const pos = toPercent(base.lon, base.lat);
+                    overlaysHTML += `
+                        <div class="military-base" style="left: ${pos.x}%; top: ${pos.y}%;" title="${base.name}">
+                            <div class="base-icon ${base.type}"></div>
+                            <div class="base-label ${base.type}">${base.name}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Nuclear facility markers
+            if (mapLayers.nuclear) {
+                NUCLEAR_FACILITIES.forEach(facility => {
+                    const pos = toPercent(facility.lon, facility.lat);
+                    const isWeapons = facility.type === 'weapons' || facility.type === 'enrichment';
+                    overlaysHTML += `
+                        <div class="nuclear-facility" style="left: ${pos.x}%; top: ${pos.y}%;" title="${facility.name} (${facility.type})">
+                            <div class="nuclear-icon ${isWeapons ? 'weapons' : ''}"></div>
+                            <div class="nuclear-label">${facility.name}</div>
+                        </div>
+                    `;
+                });
+            }
 
             // Cyber threat zones
             CYBER_REGIONS.forEach(cz => {
@@ -3118,7 +3818,7 @@
                 `;
             });
 
-            // Intel hotspots
+            // Intel hotspots with breaking news pulse for high activity
             INTEL_HOTSPOTS.forEach(spot => {
                 const activity = activityData[spot.id] || { level: 'low', score: 0, headlines: [] };
                 const pos = toPercent(spot.lon, spot.lat);
@@ -3130,6 +3830,19 @@
                     lat: spot.lat,
                     lon: spot.lon
                 }));
+
+                // Add breaking news pulse for high activity hotspots
+                if (activity.level === 'high' && activity.headlines.length > 0) {
+                    overlaysHTML += `
+                        <div class="news-pulse" style="left: ${pos.x}%; top: ${pos.y}%;">
+                            <div class="news-pulse-ring"></div>
+                            <div class="news-pulse-ring"></div>
+                            <div class="news-pulse-ring"></div>
+                            <div class="news-pulse-label">Breaking</div>
+                        </div>
+                    `;
+                }
+
                 overlaysHTML += `
                     <div class="hotspot ${activity.level}"
                          style="left: ${pos.x}%; top: ${pos.y}%;"
@@ -3150,6 +3863,28 @@
             overlaysHTML += `<div class="chokepoint-popup" id="chokepointPopup"></div>`;
             overlaysHTML += `<div class="quake-popup" id="quakePopup"></div>`;
             overlaysHTML += `<div class="cyber-popup" id="cyberPopup"></div>`;
+
+            // Layer toggle buttons
+            overlaysHTML += `
+                <div class="map-layer-toggle">
+                    <button class="layer-btn ${mapLayers.conflicts ? 'active' : ''}" onclick="toggleLayer('conflicts')">Conflicts</button>
+                    <button class="layer-btn ${mapLayers.bases ? 'active' : ''}" onclick="toggleLayer('bases')">Bases</button>
+                    <button class="layer-btn ${mapLayers.nuclear ? 'active' : ''}" onclick="toggleLayer('nuclear')">Nuclear</button>
+                    <button class="layer-btn ${mapLayers.cables ? 'active' : ''}" onclick="toggleLayer('cables')">Cables</button>
+                    <button class="layer-btn ${mapLayers.sanctions ? 'active' : ''}" onclick="toggleLayer('sanctions')">Sanctions</button>
+                    <button class="layer-btn ${mapLayers.density ? 'active' : ''}" onclick="toggleLayer('density')">Density</button>
+                </div>
+            `;
+
+            // Flashback slider
+            overlaysHTML += `
+                <div class="flashback-mode-indicator" id="flashbackIndicator">Viewing Historical Data</div>
+                <div class="flashback-control">
+                    <span class="flashback-label">Time</span>
+                    <input type="range" class="flashback-slider" id="flashbackSlider" min="0" max="24" value="0" step="1" onchange="updateFlashback(this.value)">
+                    <span class="flashback-time" id="flashbackTime">LIVE</span>
+                </div>
+            `;
 
             document.getElementById('mapOverlays').innerHTML = overlaysHTML;
 
@@ -3530,6 +4265,48 @@
             if (popup) {
                 popup.classList.remove('visible');
             }
+        }
+
+        // Calculate news density for each region
+        function calculateNewsDensity(allNews) {
+            const scores = {};
+            NEWS_REGIONS.forEach(region => {
+                let score = 0;
+                allNews.forEach(item => {
+                    const title = (item.title || '').toLowerCase();
+                    region.keywords.forEach(kw => {
+                        if (title.includes(kw)) score++;
+                    });
+                    if (item.isAlert) score += 2; // Boost for alerts
+                });
+                scores[region.id] = score;
+            });
+            return scores;
+        }
+
+        // Toggle map layer visibility
+        function toggleLayer(layerName) {
+            mapLayers[layerName] = !mapLayers[layerName];
+            // Re-render the map to apply changes
+            refreshAll();
+        }
+
+        // Update flashback time display
+        function updateFlashback(hoursAgo) {
+            const flashbackTime = document.getElementById('flashbackTime');
+            const flashbackIndicator = document.getElementById('flashbackIndicator');
+
+            if (parseInt(hoursAgo) === 0) {
+                flashbackTime.textContent = 'LIVE';
+                if (flashbackIndicator) flashbackIndicator.classList.remove('active');
+            } else {
+                const now = new Date();
+                now.setHours(now.getHours() - parseInt(hoursAgo));
+                flashbackTime.textContent = `-${hoursAgo}h`;
+                if (flashbackIndicator) flashbackIndicator.classList.add('active');
+            }
+            // Note: In a real implementation, this would fetch historical data
+            // For now, it just updates the display as a UI demonstration
         }
 
         // Fetch Congressional trades - uses news RSS since APIs are locked down
