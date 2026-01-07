@@ -1355,7 +1355,7 @@
         </section>
 
         <!-- TBPN Livestream -->
-        <section class="panel panel-wide panel-livestream" data-panel="tbpn" style="grid-column: span 4;">
+        <section class="panel panel-livestream" data-panel="tbpn">
             <div class="panel-header">
                 <span class="panel-title">Livestream</span>
                 <span class="live-indicator">LIVE</span>
@@ -1697,14 +1697,24 @@
 
         // Drag and Drop Panel Reordering
         let draggedPanel = null;
+        const NON_DRAGGABLE_PANELS = ['map', 'tbpn']; // Map stays at top, livestream has iframe
 
         function initDragAndDrop() {
             const dashboard = document.querySelector('.dashboard');
             const panels = dashboard.querySelectorAll('.panel');
 
             panels.forEach(panel => {
-                // Make panels draggable
-                panel.setAttribute('draggable', 'true');
+                const panelId = panel.dataset.panel;
+                const isDraggable = !NON_DRAGGABLE_PANELS.includes(panelId);
+
+                // Make panels draggable (except map and livestream)
+                panel.setAttribute('draggable', isDraggable ? 'true' : 'false');
+
+                if (!isDraggable) {
+                    panel.style.cursor = 'default';
+                    panel.querySelector('.panel-header').style.cursor = 'default';
+                    return; // Skip drag event listeners for non-draggable panels
+                }
 
                 panel.addEventListener('dragstart', (e) => {
                     draggedPanel = panel;
@@ -1770,7 +1780,9 @@
                 const dashboard = document.querySelector('.dashboard');
                 const panels = [...dashboard.querySelectorAll('.panel')];
 
+                // Only restore order for draggable panels
                 order.forEach(panelId => {
+                    if (NON_DRAGGABLE_PANELS.includes(panelId)) return;
                     const panel = panels.find(p => p.dataset.panel === panelId);
                     if (panel) {
                         dashboard.appendChild(panel);
