@@ -111,9 +111,14 @@
                     <span style="color: #ff00ff; margin-left: 0.4rem;">★ Base</span>
                 </span>
             </div>
-            <div class="panel-content" id="mapPanel" style="max-height: none; height: 550px; overflow: hidden; background: #0a1a14; position: relative;">
+            <div class="panel-content" id="mapPanel" style="max-height: none; height: 480px; overflow: hidden; background: #0a1a14; position: relative;">
                 <svg id="mapSvg" style="width:100%;height:100%;"></svg>
                 <div id="mapTooltip" style="position:absolute;display:none;background:rgba(0,20,15,0.95);border:1px solid #00ff88;padding:10px 14px;border-radius:4px;font-size:11px;color:#00ff88;pointer-events:none;z-index:1000;max-width:280px;font-family:monospace;line-height:1.4;"></div>
+                <div class="map-zoom-controls" id="mapZoomControls">
+                    <button class="map-zoom-btn" id="zoomInBtn">+</button>
+                    <button class="map-zoom-btn" id="zoomOutBtn">−</button>
+                    <button class="map-zoom-btn map-zoom-reset" id="zoomResetBtn">⟲</button>
+                </div>
             </div>
             <script>
                 // Inline map render with hotspots
@@ -121,13 +126,41 @@
                     const svg = d3.select('#mapSvg');
                     const tooltip = document.getElementById('mapTooltip');
                     const mapPanel = document.getElementById('mapPanel');
-                    const width = 800, height = 500;
+                    const width = 800, height = 400;
                     svg.attr('viewBox', `0 0 ${width} ${height}`);
+
+                    // Create a group for all map content (enables zoom transforms)
+                    const mapGroup = svg.append('g').attr('id', 'mapGroup');
+
+                    // Mobile-only zoom behavior
+                    const isMobile = () => window.innerWidth <= 768;
+                    const zoom = d3.zoom()
+                        .scaleExtent([1, 6])
+                        .on('zoom', (event) => {
+                            mapGroup.attr('transform', event.transform);
+                        });
+
+                    function updateZoomBehavior() {
+                        if (isMobile()) {
+                            svg.call(zoom);
+                        } else {
+                            svg.on('.zoom', null);
+                            mapGroup.attr('transform', null);
+                        }
+                    }
+                    updateZoomBehavior();
+                    window.addEventListener('resize', updateZoomBehavior);
+
+                    // Zoom button handlers
+                    const ZOOM_SCALE = 1.5;
+                    document.getElementById('zoomInBtn').onclick = () => svg.transition().call(zoom.scaleBy, ZOOM_SCALE);
+                    document.getElementById('zoomOutBtn').onclick = () => svg.transition().call(zoom.scaleBy, 1 / ZOOM_SCALE);
+                    document.getElementById('zoomResetBtn').onclick = () => svg.transition().call(zoom.transform, d3.zoomIdentity);
 
                     const projection = d3.geoEquirectangular()
                         .scale(130)
                         .center([0, 20])
-                        .translate([width/2, height/2]);
+                        .translate([width/2, height/2 - 30]);
 
                     const path = d3.geoPath().projection(projection);
 
@@ -262,7 +295,7 @@
                         const sanctionedIds = [364, 408, 760, 862, 112, 643, 728, 729]; // Iran, NK, Syria, Venezuela, Belarus, Russia, South Sudan, Sudan
 
                         // Draw countries with sanctions highlighting
-                        svg.selectAll('path.country')
+                        mapGroup.selectAll('path.country')
                             .data(countries.features)
                             .enter()
                             .append('path')
@@ -274,7 +307,7 @@
 
                         // Draw graticule (grid lines)
                         const graticule = d3.geoGraticule().step([30, 30]);
-                        svg.append('path')
+                        mapGroup.append('path')
                             .datum(graticule)
                             .attr('d', path)
                             .attr('fill', 'none')
@@ -293,7 +326,7 @@
                         oceans.forEach(o => {
                             const [x, y] = projection([o.lon, o.lat]);
                             if (x && y) {
-                                svg.append('text')
+                                mapGroup.append('text')
                                     .attr('x', x).attr('y', y)
                                     .attr('fill', '#1a4a40')
                                     .attr('font-size', '10px')
@@ -328,7 +361,7 @@
                             terminatorPoints.push([lon, lat]);
                         }
 
-                        svg.append('path')
+                        mapGroup.append('path')
                             .datum({type: 'Polygon', coordinates: [terminatorPoints]})
                             .attr('d', path)
                             .attr('fill', 'rgba(0,0,0,0.3)')
@@ -344,7 +377,7 @@
                             { name: 'Myanmar', coords: [[92,28],[101,28],[101,10],[92,10],[92,28]], color: '#ff8844' }
                         ];
                         conflictZones.forEach(zone => {
-                            svg.append('path')
+                            mapGroup.append('path')
                                 .datum({type: 'Polygon', coordinates: [zone.coords]})
                                 .attr('d', path)
                                 .attr('fill', zone.color)
@@ -367,19 +400,19 @@
                         chokepoints.forEach(cp => {
                             const [x, y] = projection([cp.lon, cp.lat]);
                             if (x && y) {
-                                svg.append('rect')
+                                mapGroup.append('rect')
                                     .attr('x', x - 4).attr('y', y - 4)
                                     .attr('width', 8).attr('height', 8)
                                     .attr('fill', '#00aaff')
                                     .attr('opacity', 0.8)
                                     .attr('transform', `rotate(45,${x},${y})`);
-                                svg.append('text')
+                                mapGroup.append('text')
                                     .attr('x', x + 8).attr('y', y + 3)
                                     .attr('fill', '#00aaff')
                                     .attr('font-size', '7px')
                                     .attr('font-family', 'monospace')
                                     .text(cp.name);
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 10)
                                     .attr('fill', 'transparent')
                                     .attr('class', 'hotspot-hit')
@@ -415,12 +448,12 @@
                         cableLandings.forEach(cl => {
                             const [x, y] = projection([cl.lon, cl.lat]);
                             if (x && y) {
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 3)
                                     .attr('fill', 'none')
                                     .attr('stroke', '#aa44ff')
                                     .attr('stroke-width', 1.5);
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 10)
                                     .attr('fill', 'transparent')
                                     .attr('class', 'hotspot-hit')
@@ -454,16 +487,16 @@
                             const [x, y] = projection([ns.lon, ns.lat]);
                             if (x && y) {
                                 // Radiation symbol (simplified)
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 2)
                                     .attr('fill', '#ffff00');
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 5)
                                     .attr('fill', 'none')
                                     .attr('stroke', '#ffff00')
                                     .attr('stroke-width', 1)
                                     .attr('stroke-dasharray', '3,3');
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 10)
                                     .attr('fill', 'transparent')
                                     .attr('class', 'hotspot-hit')
@@ -500,11 +533,11 @@
                             if (x && y) {
                                 // Star shape for military
                                 const starPath = `M${x},${y-5} L${x+1.5},${y-1.5} L${x+5},${y-1.5} L${x+2.5},${y+1} L${x+3.5},${y+5} L${x},${y+2.5} L${x-3.5},${y+5} L${x-2.5},${y+1} L${x-5},${y-1.5} L${x-1.5},${y-1.5} Z`;
-                                svg.append('path')
+                                mapGroup.append('path')
                                     .attr('d', starPath)
                                     .attr('fill', '#ff00ff')
                                     .attr('opacity', 0.8);
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 10)
                                     .attr('fill', 'transparent')
                                     .attr('class', 'hotspot-hit')
@@ -549,23 +582,23 @@
                             const color = threatColors[h.level] || threatColors.low;
                             if (x && y) {
                                 // Outer pulsing ring
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 6)
                                     .attr('fill', 'none').attr('stroke', color)
                                     .attr('stroke-width', 1.5).attr('opacity', 0.6)
                                     .attr('class', 'hotspot-pulse');
                                 // Inner solid circle
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 3)
                                     .attr('fill', color).attr('opacity', 0.9);
                                 // Label
-                                svg.append('text')
+                                mapGroup.append('text')
                                     .attr('x', x + 8).attr('y', y + 3)
                                     .attr('fill', color).attr('font-size', '8px')
                                     .attr('font-family', 'monospace')
                                     .text(h.name);
                                 // Invisible hit area for tooltip
-                                svg.append('circle')
+                                mapGroup.append('circle')
                                     .attr('cx', x).attr('cy', y).attr('r', 12)
                                     .attr('fill', 'transparent')
                                     .attr('class', 'hotspot-hit')
@@ -654,7 +687,7 @@
                                     const size = 6;
                                     const triangle = `M${x},${y-size} L${x+size},${y+size/2} L${x-size},${y+size/2} Z`;
 
-                                    svg.append('path')
+                                    mapGroup.append('path')
                                         .attr('d', triangle)
                                         .attr('fill', color)
                                         .attr('stroke', '#000')
@@ -662,7 +695,7 @@
                                         .attr('class', 'weather-alert');
 
                                     // Hit area for tooltip
-                                    svg.append('circle')
+                                    mapGroup.append('circle')
                                         .attr('cx', x).attr('cy', y).attr('r', 10)
                                         .attr('fill', 'transparent')
                                         .attr('class', 'hotspot-hit')
@@ -714,7 +747,7 @@
 
                                 if (x && y) {
                                     // Outer ring
-                                    svg.append('circle')
+                                    mapGroup.append('circle')
                                         .attr('cx', x).attr('cy', y)
                                         .attr('r', radius + 3)
                                         .attr('fill', 'none')
@@ -723,14 +756,14 @@
                                         .attr('opacity', 0.4);
 
                                     // Inner circle
-                                    svg.append('circle')
+                                    mapGroup.append('circle')
                                         .attr('cx', x).attr('cy', y)
                                         .attr('r', radius)
                                         .attr('fill', color)
                                         .attr('opacity', 0.7);
 
                                     // Hit area for tooltip
-                                    svg.append('circle')
+                                    mapGroup.append('circle')
                                         .attr('cx', x).attr('cy', y)
                                         .attr('r', 10)
                                         .attr('fill', 'transparent')
