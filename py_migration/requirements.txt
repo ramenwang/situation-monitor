@@ -1,0 +1,20 @@
+# Core dependencies
+aiohttp>=3.9.0
+
+# Optional dependencies (uncomment as needed)
+# pydantic>=2.0.0        # For stricter validation
+# nltk>=3.8.0            # For advanced NLP
+# spacy>=3.7.0           # For NER, POS tagging
+# transformers>=4.30.0   # For ML-based sentiment
+# feedparser>=6.0.0      # Alternative RSS parser
+# beautifulsoup4>=4.12.0 # For HTML parsing
+# redis>=5.0.0           # For Redis caching
+# httpx>=0.25.0          # Alternative HTTP client
+
+# Development dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.0.0
+black>=23.0.0
+mypy>=1.5.0
+ruff>=0.1.0

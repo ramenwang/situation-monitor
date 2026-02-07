@@ -1,0 +1,22 @@
+{
+  "name": "trading-news-scanner",
+  "version": "1.0.0",
+  "description": "Trading news scanning and summarization toolkit - extracted from situation-monitor",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "demo": "cd .. && npx vite-node migration/run_demo.ts",
+    "test": "cd .. && npx vitest run migration/tests/",
+    "test:watch": "cd .. && npx vitest migration/tests/",
+    "build": "cd .. && npx tsc -p migration/tsconfig.json"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {
+    "better-sqlite3": "^11.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
